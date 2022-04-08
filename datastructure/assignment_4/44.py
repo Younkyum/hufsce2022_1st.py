@@ -1,36 +1,31 @@
-class QueueCircular:
-    def __init__(self, count=10):
-        self.front = 0
-        self.rear = 0
-        self.count = count
-        self.items = [None] * self.count
+arvt = []
+judgt = []
+k = int(input())
 
-    def is_empty(self):
-        return self.front == self.rear
+for i in range(k):
+    arvt_idx, judgt_idx = map(int, input().split())
+    arvt.insert(i, arvt_idx)
+    judgt.insert(i, judgt_idx)
 
-    def is_full(self):
-        return self.front == (self.rear + 1) % self.count
+waitt = [0 for i in range(k + 1)]
+pure_wait_time = [0 for i in range(k+1)]
+sum_arvt = [0 for i in range(k + 1)]
 
-    def put_in(self, data):
-        if not self.is_full():
-            self.rear = (self.rear + 1) % self.count
-            self.items[self.rear] = data
-        else:
-            self.items = self.items + ([None] * self.count)
-            self.count += self.count
-            self.rear = (self.rear + 1) % self.count
-            self.items[self.rear] = data
+num = 0
+for i in range(len(arvt)):
+    if arvt[i] != 0:
+        num += arvt[i]
+    sum_arvt[i] += num
 
-    def put_out(self):
-        if not self.is_empty():
-            self.front = (self.front + 1) % self.count
-            return self.items[self.front]
+k1 = sum_arvt[0] + judgt[0]
+k2 = sum_arvt[1] + judgt[1]
 
-stack = QueueCircular()
-stack.put_in(5)
-stack.put_in(6)
-stack.put_in(7)
+for i in range(2, k):
+    waitt[i] = sum_arvt[i] + min(abs(sum_arvt[i] - k1), abs(sum_arvt[i] - k2)) + judgt[i]
+    pure_wait_time[i] = min(abs(sum_arvt[i] - k1), abs(sum_arvt[i] - k2))
+    if k1 > k2:
+        k2 = waitt[i]
+    else:
+        k1 = waitt[i]
 
-print(stack.put_out())
-print(stack.put_out())
-print(stack.put_out())
+print(round(sum(pure_wait_time)/k, 1))

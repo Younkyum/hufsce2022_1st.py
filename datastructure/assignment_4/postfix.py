@@ -35,8 +35,9 @@ class Stack:
             print(node.data, ']', sep='')
 
 
-op = ['+', '–', '*', '//', '%']
+op = ['+', '-', '*', '//', '%']
 num_stack = Stack()
+error = 0
 entered = input().split()
 total = 0
 for i in entered:
@@ -48,9 +49,13 @@ for i in entered:
         try:
             first_pop = num_stack.pop()
             second_pop = num_stack.pop()
+            if second_pop == -1:
+                error = 1
+                print("error")
+                break
             if i == '+':
                 num_stack.push(first_pop + second_pop)
-            elif i == '–':
+            elif i == '-':
                 num_stack.push(second_pop - first_pop)
             elif i == '*':
                 num_stack.push(first_pop * second_pop)
@@ -60,12 +65,17 @@ for i in entered:
                 num_stack.push(second_pop % first_pop)
             else:
                 print("error")
+                error = 1
+                break
         except:
             print("error")
+            error = 1
             break
 
 total = num_stack.pop()
-if num_stack.is_empty():
-    print(total)
-else:
-    print("error")
+if error != 1:
+    if num_stack.is_empty():
+        print(total)
+    else:
+        print("error")
+
